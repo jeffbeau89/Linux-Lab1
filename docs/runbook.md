@@ -6,7 +6,7 @@ cloud security incidents. Locking down access before deploying any
 infrastructure is standard practice in enterprise environments.
 
 ### Steps Completed
-- Enabled MFA on root account (hardware token / authenticator app)
+- Enabled MFA on root account (authenticator app)
 - Created IAM user `lab-admin` — all work performed under this identity
 - Root account credentials stored securely and not used operationally
 - Password policy enforced at account level
