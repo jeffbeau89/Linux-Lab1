@@ -87,3 +87,51 @@ chronyc tracking                  # Confirm time sync
 sudo firewall-cmd --list-all      # Confirm firewall active
 sshd -T | grep -E 'permitroot|passwordauth'  # Confirm SSH hardening
 ```
+
+
+## web01 — Apache Web Server
+
+### Installation and Configuration
+- Apache (httpd) installed via dnf
+- Service enabled to start on boot
+- firewalld opened for HTTP (80) and HTTPS (443)
+- Default index page replaced with lab identifier page
+
+### Verification
+```bash
+sudo systemctl status httpd
+sudo firewall-cmd --list-services
+curl http://localhost
+```
+
+### Expected Output
+httpd active (running), http and https listed in firewalld services, 
+HTML response returned from curl.
+
+
+## db01 — Mariadb Database 
+
+###  Installation and Configuration 
+- Mariadb installed via dnf 
+- Service enabled to start on boot 
+- firewalld opened for port 3306/tcp  
+
+### Verification
+```bash 
+sudo systemctl status mariadb 
+sudo firewall-cmd --list-services 
+```
+
+### Expected Output 
+mariadb active (running), port 3306 listed in firewalld services.
+
+### Why This Matters
+Apache is the most widely deployed web server in enterprise environments. 
+Separating the web tier from the database tier is a core principle of 
+defense in depth.
+
+### Why This Matters
+MariaDB is the default database in RHEL environments. Isolating the 
+database to its own node and restricting access to the web tier only 
+follows the principle of least privilege at the network level.
+
