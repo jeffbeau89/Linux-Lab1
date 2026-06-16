@@ -17,11 +17,11 @@ Logged in as lab-admin successfully. Root account MFA confirmed active.
 
 ## Instance Inventory
 
-| Hostname | Role | Private IP | Public IP | Security Group | AMI |
-|---|---|---|---|---|---|
-| control01 | Ansible control / admin | 10.0.1.145 | 13.58.233.127 | sg-control | RHEL 9 |
-| web01 | Apache web server | 10.0.1.220 | 3.138.170.33 | sg-web | RHEL 9 |
-| db01 | MariaDB database | 10.0.1.224 | 3.142.199.39 | sg-db | RHEL 9 |
+| Hostname | Role | Private IP | Security Group | AMI |
+|---|---|---|---|---|
+| control01 | Ansible control / admin | 10.0.1.145 | sg-control | RHEL 9 |
+| web01 | Apache web server | 10.0.1.220 | sg-web | RHEL 9 |
+| db01 | MariaDB database | 10.0.1.224  | sg-db | RHEL 9 |
 
 *Public IPs are dynamic and reassigned on instance stop/start.*
 
