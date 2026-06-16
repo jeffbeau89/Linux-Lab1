@@ -91,6 +91,11 @@ sshd -T | grep -E 'permitroot|passwordauth'  # Confirm SSH hardening
 
 ## web01 — Apache Web Server
 
+### Why This Matters
+Apache is the most widely deployed web server in enterprise environments.
+Separating the web tier from the database tier is a core principle of
+defense in depth.
+
 ### Installation and Configuration
 - Apache (httpd) installed via dnf
 - Service enabled to start on boot
@@ -111,6 +116,11 @@ HTML response returned from curl.
 
 ## db01 — Mariadb Database 
 
+### Why This Matters
+MariaDB is the default database in RHEL environments. Isolating the
+database to its own node and restricting access to the web tier only
+follows the principle of least privilege at the network level.
+
 ###  Installation and Configuration 
 - Mariadb installed via dnf 
 - Service enabled to start on boot 
@@ -125,13 +135,55 @@ sudo firewall-cmd --list-services
 ### Expected Output 
 mariadb active (running), port 3306 listed in firewalld services.
 
-### Why This Matters
-Apache is the most widely deployed web server in enterprise environments. 
-Separating the web tier from the database tier is a core principle of 
-defense in depth.
+
+## Centralized Logging with rsyslog
 
 ### Why This Matters
-MariaDB is the default database in RHEL environments. Isolating the 
-database to its own node and restricting access to the web tier only 
-follows the principle of least privilege at the network level.
+In enterprise environments logs are never checked server by server. 
+Centralizing logs to a single aggregator enables:
+- **Security monitoring** — detect attacks across all servers at once
+- **Troubleshooting** — correlate events across web, app, and database tiers
+- **Compliance** — many regulations require centralized log retention
+
+This setup mirrors the foundation of enterprise tools like Splunk.
+
+### Configuration
+
+#### control01 — Log Aggregator
+```bash
+sudo bash -c 'cat >> /etc/rsyslog.conf << EOF
+module(load="imudp")
+input(type="imudp" port="514")
+module(load="imtcp")
+input(type="imtcp" port="514")
+EOF'
+sudo firewall-cmd --permanent --add-port=514/tcp
+sudo firewall-cmd --permanent --add-port=514/udp
+sudo firewall-cmd --reload
+sudo systemctl restart rsyslog
+```
+- AWS security group updated to allow TCP/UDP port 514 from 10.0.0.0/16
+
+#### web01 and db01 — Log Forwarders
+```bash
+echo "*.* @10.0.1.145:514" | sudo tee -a /etc/rsyslog.conf
+sudo systemctl restart rsyslog
+```
+
+### Verification
+
+#### On web01 and db01 — generate a test log entry
+```bash
+logger "Test log from web01 to control01"
+logger "Test log from db01 to control01"
+```
+
+#### On control01 — confirm logs are arriving
+```bash
+sudo tail -f /var/log/messages
+```
+
+### Expected Output
+Test log entries from web01 and db01 visible in real time in 
+/var/log/messages on control01. Screenshot saved to screenshots/.
 
