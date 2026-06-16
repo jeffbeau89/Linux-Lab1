@@ -38,3 +38,9 @@ ssh -i web01.pem ec2-user@3.138.170.33
 ```
 
 **Note:** Seperate Key files for each instance for compliance purposes (i.e. Different teams manage different servers). Key files must have permissions 400. Store Key files securely — never commit it to the repository.
+
+### ICMP Rule Addition
+
+Although not included in the initial configuration, all security groups were updated to allow ICMP (ping) traffic sourced from within the VPC (10.0.0.0/16). This enables internal network verification between instances without exposing ping to the public internet.
+
+
