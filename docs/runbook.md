@@ -25,6 +25,10 @@ Logged in as lab-admin successfully. Root account MFA confirmed active.
 
 *Public IPs are dynamic and reassigned on instance stop/start.*
 
+## Hostnames
+Set hostnames on all instances to match inventory names for clarity 
+during SSH sessions and future Ansible inventory configuration.
+
 ## SSH Access
 
 ```bash
