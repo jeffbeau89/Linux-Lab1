@@ -25,9 +25,6 @@ Logged in as lab-admin successfully. Root account MFA confirmed active.
 
 *Public IPs are dynamic and reassigned on instance stop/start.*
 
-## Hostnames
-Set hostnames on all instances to match inventory names for clarity 
-during SSH sessions and future Ansible inventory configuration.
 
 ## SSH Access
 
@@ -44,3 +41,49 @@ ssh -i web01.pem ec2-user@3.138.170.33
 Although not included in the initial configuration, all security groups were updated to allow ICMP (ping) traffic sourced from within the VPC (10.0.0.0/16). This enables internal network verification between instances without exposing ping to the public internet.
 
 
+
+## OS Baseline Hardening
+
+Applied to: control01, web01, db01
+
+### Package Updates
+All packages updated to current versions on initial build.  
+**Why:** Unpatched packages are the most common attack vector in 
+enterprise Linux breaches.
+
+### Hostname and Host Resolution
+Static hostnames set via hostnamectl. Internal IPs mapped in /etc/hosts.  
+**Why:** Consistent hostname resolution is required for service 
+configuration, logging correlation, and future Ansible inventory.
+
+### SSH Hardening
+- Root login disabled  
+- Password authentication disabled (key-based only)  
+**Why:** Root SSH access and password auth are two of the most 
+commonly exploited entry points. Key-based auth eliminates 
+brute-force password attacks entirely.
+
+### SELinux
+Set to enforcing mode on all nodes.  
+**Why:** SELinux provides mandatory access controls that limit the 
+blast radius of a compromised service. Enforcing mode is the 
+enterprise standard.
+
+### Time Synchronization
+chronyd enabled and syncing on all nodes.  
+**Why:** Accurate time is critical for log correlation, Kerberos 
+authentication, and SSL certificate validation across a fleet.
+
+### firewalld
+Enabled and active on all nodes. Service-specific rules documented 
+per node in subsequent sections.  
+**Why:** Host-based firewall provides a second layer of network 
+control beyond Security Groups.
+
+### Verification Commands
+```bash
+sestatus                          # Confirm SELinux enforcing
+chronyc tracking                  # Confirm time sync
+sudo firewall-cmd --list-all      # Confirm firewall active
+sshd -T | grep -E 'permitroot|passwordauth'  # Confirm SSH hardening
+```
