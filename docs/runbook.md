@@ -34,7 +34,7 @@ ssh -i db01.pem ec2-user@3.142.199.39
 ssh -i web01.pem ec2-user@3.138.170.33
 ```
 
-**Note:** Seperate Key files for each instance for compliance purposes (i.e. Different teams manage different servers). Key files must have permissions 400. Store Key files securely — never commit it to the repository.
+**Note:** Separate Key files for each instance for compliance purposes (i.e. Different teams manage different servers). Key files must have permissions 400. Store Key files securely — never commit it to the repository.
 
 ### ICMP Rule Addition
 
