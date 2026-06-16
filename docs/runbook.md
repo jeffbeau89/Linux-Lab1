@@ -18,7 +18,7 @@ Logged in as lab-admin successfully. Root account MFA confirmed active.
 ## Instance Inventory
 
 | Hostname | Role | Private IP | Public IP | Security Group | AMI |
-|---|---|---|---|---|
+|---|---|---|---|---|---|
 | control01 | Ansible control / admin | 10.0.1.145 | 13.58.233.127 | sg-control | RHEL 9 |
 | web01 | Apache web server | 10.0.1.220 | 3.138.170.33 | sg-web | RHEL 9 |
 | db01 | MariaDB database | 10.0.1.224 | 3.142.199.39 | sg-db | RHEL 9 |
@@ -30,7 +30,7 @@ Logged in as lab-admin successfully. Root account MFA confirmed active.
 ```bash
 ssh -i control01.pem ec2-user@13.58.233.127
 ssh -i db01.pem ec2-user@3.142.199.39
-ssh -i web01.pem web01@3.138.170.33
+ssh -i web01.pem ec2-user@3.138.170.33
 ```
 
 **Note:** Seperate Key files for each instance for compliance purposes (i.e. Different teams manage different servers). Key files must have permissions 400. Store Key files securely — never commit it to the repository.
